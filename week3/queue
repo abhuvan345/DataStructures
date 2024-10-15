@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 4
+
+int queue[MAX];
+int front = -1;
+int rear = -1;
+
+void insert();
+void delete();
+void display();
+
+int main() {
+    int ch;
+    while (1) {
+        printf("Perform Queue Operations: \n");
+        printf("1. INSERT\n2. DELETE\n3. DISPLAY\n4. EXIT\n");
+        printf("Enter your choice: ");
+        scanf("%d", &ch);
+
+        switch (ch) {
+            case 1:
+                insert();
+                break;
+
+            case 2:
+                delete();
+                break;
+
+            case 3:
+                display();
+                break;
+
+            case 4:
+                exit(0);
+
+            default:
+                printf("\nInvalid option entered!!!\n");
+        }
+    }
+}
+
+void insert() {
+    int element;
+    if (rear == MAX - 1) {  // Changed '=' to '=='
+        printf("\nQueue is Full!!!\n");
+        return;
+    } else {
+        printf("\nEnter the element to be added: ");
+        scanf("%d", &element);
+        if (front == -1 && rear == -1) { // Initialize front and rear
+            front = 0;
+        }
+        rear++;
+        queue[rear] = element;
+    }
+}
+
+void delete() {
+    if (front == -1) { // Check if queue is empty
+        printf("\nQueue is Empty !!\n");
+        return;
+    }
+
+    int element = queue[front];
+    printf("\nThe deleted element is %d\n", element);
+
+    if (front == rear) { // Queue will be empty after this deletion
+        front = -1;
+        rear = -1;
+    } else {
+        front++;
+    }
+}
+
+void display() {
+    if (front == -1) { // Check if queue is empty
+        printf("\nQueue is Empty!!\n");
+        return;
+    } else {
+        printf("\nThe Elements in the queue are: ");
+        for (int i = front; i <= rear; i++) { // Changed '<' to '<='
+            printf("%d ", queue[i]);
+        }
+        printf("\n");
+    }
+}
