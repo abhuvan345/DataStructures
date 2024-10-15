@@ -1,0 +1,19 @@
+char* clearDigits(char* s) {
+     int write_index = 0;  
+    
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (isdigit(s[i])) {
+            
+            if (write_index > 0) {
+                write_index--;  
+            }
+        } else {
+            
+            s[write_index++] = s[i];
+        }
+    }
+    
+    s[write_index] = '\0';
+
+    return s;  
+}
