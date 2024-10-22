@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <String.h>
+
+#define MAX 4
+
+int CQ[MAX];
+int front = -1, rear = -1;
+
+void insert();
+void delete();
+void display();
+
+int main()
+{
+    int ch;
+    while (1)
+    {
+        printf("\nPerform operations on stack: ");
+        printf("\n1.INSERT\n2.DELETE\n3.DISPLAY\n4.EXIT\n");
+        scanf("%d", &ch);
+
+        switch (ch)
+        {
+        case 1:
+            insert();
+            break;
+
+        case 2:
+            delete();
+            break;
+
+        case 3:
+            display();
+            break;
+
+        case 4:
+            exit(0);
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+void insert()
+{
+    int element;
+
+    if (front == (rear + 1) % MAX)
+    {
+        printf("\nQueue is Full!!");
+        return;
+    }
+    else
+    {
+        printf("\nEnter the elements to be entered: ");
+        scanf("%d", &element);
+        if (front == -1 && rear == -1)
+        {
+            front = 0;
+            rear = 0;
+        }
+        else
+        {
+            rear = (rear + 1) % MAX;
+        }
+        CQ[rear] = element;
+        return;
+    }
+}
+
+void delete()
+{
+    if (front == -1 && rear == -1)
+    {
+        printf("\nQueue is Empty!!");
+        return ;
+    }
+    int item = CQ[front];
+    printf("\nDeleted Item is: %d", item);
+    if (front == rear)
+    {
+        front = -1;
+        rear = -1;
+    }
+    else
+    {
+        front = (front + 1) % MAX;
+    }
+}
+
+void display()
+{
+    if(front == -1 && rear == -1)
+    {
+        printf("\nQueue is empty!!");
+        return ;
+    }
+    printf("\nCircular Queue contents are: ");
+    if (front <= rear)
+    {
+        for (int i = front; i <= rear; i++)
+        {
+            printf("\n%d",CQ[i]);
+        }
+    }
+    else
+    {
+        for (int i = front; i < MAX - 1; i++)
+        {
+            printf("\n%d",CQ[i]);
+        }
+        for (int i = 0; i <= rear; i++)
+        {
+            printf("\n%d",CQ[i]);
+        }
+    }
+}
