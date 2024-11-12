@@ -1,0 +1,172 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *link;
+};
+typedef struct Node node;
+
+node *start = NULL, *curr = NULL, *new1 = NULL;
+
+void create(); 
+void display(); 
+void insertAtFirst();
+void insertAtPosition();
+void insertAtEnd();
+
+int main() {
+    int ch;
+    while (1) {
+        printf("1. Create\n2. Display\n3. Insert at First Position\n4. Insert at Specific Position\n5. Insert at End\n6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &ch);
+
+        switch (ch) {
+            case 1:
+                create();
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                insertAtFirst();
+                break;
+            case 4:
+                insertAtPosition();
+                break;
+            case 5:
+                insertAtEnd();
+                break;
+            case 6:
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+}
+
+void create() {
+    char ch;
+    do {
+        new1 = (node *)malloc(sizeof(node));
+        if (new1 == NULL) {
+            printf("Memory allocation failed!\n");
+            return;
+        }
+
+        printf("Enter value: ");
+        scanf("%d", &new1->data);
+
+        if (start == NULL) {
+            start = new1;
+            curr = new1;
+        } else {
+            curr->link = new1;
+            curr = new1;
+        }
+
+        printf("Do you want to add another element (y/n): ");
+        getchar(); // To clear the newline character left by scanf
+        scanf("%c", &ch);
+        
+    } while (ch == 'y' || ch == 'Y');
+
+    curr->link = NULL;
+}
+
+void display() {
+    node *temp;
+    if (start == NULL) {
+        printf("Linked List is empty.\n");
+        return;
+    }
+
+    printf("Elements in the Linked List: ");
+    temp = start;
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->link;
+    }
+    printf("\n");
+}
+
+void insertAtFirst() {
+    new1 = (node *)malloc(sizeof(node));
+    if (new1 == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter value to insert at first position: ");
+    scanf("%d", &new1->data);
+
+    if (start == NULL) {
+        start = new1;
+        new1->link = NULL;
+    } else {
+        new1->link = start;
+        start = new1;
+    }
+}
+
+void insertAtPosition() {
+    int pos, i;
+    printf("Enter the position to insert the node: ");
+    scanf("%d", &pos);
+
+    // Create a new node
+    new1 = (node *)malloc(sizeof(node));
+    if (new1 == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter value to insert at position %d: ", pos);
+    scanf("%d", &new1->data);
+
+    // If inserting at the first position
+    if (pos == 1) {
+        new1->link = start;
+        start = new1;
+        return;
+    }
+
+    // Find the node before the position
+    node *temp = start;
+    for (i = 1; temp != NULL && i < pos - 1; i++) {
+        temp = temp->link;
+    }
+
+    if (temp == NULL) {
+        printf("Position is beyond the length of the list.\n");
+        free(new1);  // Free memory if position is invalid
+        return;
+    }
+
+    new1->link = temp->link;
+    temp->link = new1;
+}
+
+void insertAtEnd() {
+    new1 = (node *)malloc(sizeof(node));
+    if (new1 == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter value to insert at the end: ");
+    scanf("%d", &new1->data);
+    new1->link = NULL;
+
+    // If list is empty, new node becomes the first node
+    if (start == NULL) {
+        start = new1;
+    } else {
+        curr = start;
+        while (curr->link != NULL) {
+            curr = curr->link;
+        }
+        curr->link = new1;
+    }
+}
