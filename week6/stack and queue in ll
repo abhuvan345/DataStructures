@@ -1,0 +1,236 @@
+// to run this
+// gcc -o stack_queue_program week6.1.c
+// ./stack_queue_program
+
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void push(struct Node** top, int data) {
+    struct Node* newNode = createNode(data);
+    newNode->next = *top;  
+    *top = newNode;        
+    printf("%d pushed to stack\n", data);
+}
+
+
+int pop(struct Node** top) {
+    if (*top == NULL) {
+        printf("Stack is empty, cannot pop\n");
+        return -1;
+    }
+    struct Node* temp = *top;
+    int poppedData = temp->data;
+    *top = temp->next;  
+    free(temp);         
+    return poppedData;
+}
+
+
+int peek(struct Node* top) {
+    if (top == NULL) {
+        printf("Stack is empty\n");
+        return -1;
+    }
+    return top->data;
+}
+
+
+int isEmptyStack(struct Node* top) {
+    return top == NULL;
+}
+
+
+void enqueue(struct Node** front, struct Node** rear, int data) {
+    struct Node* newNode = createNode(data);
+    if (*rear == NULL) {
+        *front = *rear = newNode;  
+    } else {
+        (*rear)->next = newNode;   
+        *rear = newNode;           
+    }
+    printf("%d enqueued to queue\n", data);
+}
+
+
+int dequeue(struct Node** front, struct Node** rear) {
+    if (*front == NULL) {
+        printf("Queue is empty, cannot dequeue\n");
+        return -1;
+    }
+    struct Node* temp = *front;
+    int dequeuedData = temp->data;
+    *front = temp->next;  
+    if (*front == NULL) {
+        *rear = NULL;  
+    }
+    free(temp);  
+    return dequeuedData;
+}
+
+
+int front(struct Node* front) {
+    if (front == NULL) {
+        printf("Queue is empty\n");
+        return -1;
+    }
+    return front->data;
+}
+
+
+int isEmptyQueue(struct Node* front) {
+    return front == NULL;
+}
+
+
+void display(struct Node* head) {
+    if (head == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+
+int main() {
+    struct Node* stackTop = NULL;  
+    struct Node* queueFront = NULL;  
+    struct Node* queueRear = NULL;   
+
+    int choice, data;
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Stack Operations\n");
+        printf("2. Queue Operations\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                do {
+                    printf("\nStack Menu:\n");
+                    printf("1. Push to stack\n");
+                    printf("2. Pop from stack\n");
+                    printf("3. Peek stack\n");
+                    printf("4. Check if stack is empty\n");
+                    printf("5. Display stack\n");
+                    printf("6. Back to main menu\n");
+                    printf("Enter your choice: ");
+                    scanf("%d", &choice);
+
+                    switch (choice) {
+                        case 1:
+                            printf("Enter data to push: ");
+                            scanf("%d", &data);
+                            push(&stackTop, data);
+                            break;
+                        case 2:
+                            data = pop(&stackTop);
+                            if (data != -1) {
+                                printf("%d popped from stack\n", data);
+                            }
+                            break;
+                        case 3:
+                            data = peek(stackTop);
+                            if (data != -1) {
+                                printf("Top element is: %d\n", data);
+                            }
+                            break;
+                        case 4:
+                            if (isEmptyStack(stackTop)) {
+                                printf("Stack is empty.\n");
+                            } else {
+                                printf("Stack is not empty.\n");
+                            }
+                            break;
+                        case 5:
+                            printf("Stack contents: ");
+                            display(stackTop);
+                            break;
+                        case 6:
+                            break;
+                        default:
+                            printf("Invalid choice! Try again.\n");
+                    }
+                } while (choice != 6);
+                break;
+
+            case 2:
+                do {
+                    printf("\nQueue Menu:\n");
+                    printf("1. Enqueue to queue\n");
+                    printf("2. Dequeue from queue\n");
+                    printf("3. Peek queue\n");
+                    printf("4. Check if queue is empty\n");
+                    printf("5. Display queue\n");
+                    printf("6. Back to main menu\n");
+                    printf("Enter your choice: ");
+                    scanf("%d", &choice);
+
+                    switch (choice) {
+                        case 1:
+                            printf("Enter data to enqueue: ");
+                            scanf("%d", &data);
+                            enqueue(&queueFront, &queueRear, data);
+                            break;
+                        case 2:
+                            data = dequeue(&queueFront, &queueRear);
+                            if (data != -1) {
+                                printf("%d dequeued from queue\n", data);
+                            }
+                            break;
+                        case 3:
+                            data = front(queueFront);
+                            if (data != -1) {
+                                printf("Front element is: %d\n", data);
+                            }
+                            break;
+                        case 4:
+                            if (isEmptyQueue(queueFront)) {
+                                printf("Queue is empty.\n");
+                            } else {
+                                printf("Queue is not empty.\n");
+                            }
+                            break;
+                        case 5:
+                            printf("Queue contents: ");
+                            display(queueFront);
+                            break;
+                        case 6:
+                            break;
+                        default:
+                            printf("Invalid choice! Try again.\n");
+                    }
+                } while (choice != 6);
+                break;
+
+            case 3:
+                printf("Exiting the program.\n");
+                break;
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    } while (choice != 3);
+
+    return 0;
+}
