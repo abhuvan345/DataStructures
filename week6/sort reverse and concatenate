@@ -1,0 +1,164 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+
+void appendNode(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        struct Node* temp = *head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+
+void sortList(struct Node* head) {
+    if (head == NULL) return;
+    
+    struct Node *i, *j;
+    int temp;
+    for (i = head; i != NULL; i = i->next) {
+        for (j = i->next; j != NULL; j = j->next) {
+            if (i->data > j->data) {
+                
+                temp = i->data;
+                i->data = j->data;
+                j->data = temp;
+            }
+        }
+    }
+}
+
+
+void reverseList(struct Node** head) {
+    struct Node* prev = NULL;
+    struct Node* current = *head;
+    struct Node* next = NULL;
+    
+    while (current != NULL) {
+        next = current->next; 
+        current->next = prev;  
+        prev = current;        
+        current = next;
+    }
+    *head = prev;  
+}
+
+
+void concatenateLists(struct Node** head1, struct Node* head2) {
+    if (*head1 == NULL) {
+        *head1 = head2;
+        return;
+    }
+    
+    struct Node* temp = *head1;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = head2;
+}
+
+
+int main() {
+    struct Node* head1 = NULL;
+    struct Node* head2 = NULL;
+    int choice, data;
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Insert node into first list\n");
+        printf("2. Insert node into second list\n");
+        printf("3. Display first list\n");
+        printf("4. Display second list\n");
+        printf("5. Sort the first list\n");
+        printf("6. Reverse the first list\n");
+        printf("7. Concatenate the two lists\n");
+        printf("8. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        
+        switch (choice) {
+            case 1:
+                printf("Enter data to insert into first list: ");
+                scanf("%d", &data);
+                appendNode(&head1, data);
+                break;
+                
+            case 2:
+                printf("Enter data to insert into second list: ");
+                scanf("%d", &data);
+                appendNode(&head2, data);
+                break;
+                
+            case 3:
+                printf("Displaying first list:\n");
+                displayList(head1);
+                break;
+                
+            case 4:
+                printf("Displaying second list:\n");
+                displayList(head2);
+                break;
+                
+            case 5:
+                printf("Sorting first list:\n");
+                sortList(head1);
+                displayList(head1);
+                break;
+                
+            case 6:
+                printf("Reversing first list:\n");
+                reverseList(&head1);
+                displayList(head1);
+                break;
+                
+            case 7:
+                printf("Concatenating the two lists:\n");
+                concatenateLists(&head1, head2);
+                displayList(head1);
+                break;
+                
+            case 8:
+                printf("Exiting the program.\n");
+                break;
+                
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+        
+    } while (choice != 8);
+    
+    return 0;
+}
