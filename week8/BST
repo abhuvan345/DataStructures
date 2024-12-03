@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+
+struct Node* insertNode(struct Node* root, int data) {
+    if (root == NULL) {
+        return createNode(data);
+    }
+    if (data < root->data) {
+        root->left = insertNode(root->left, data);
+    } else if (data > root->data) {
+        root->right = insertNode(root->right, data);
+    }
+    return root;
+}
+
+
+void inorder(struct Node* root) {
+    if (root != NULL) {
+        inorder(root->left); 
+        printf("%d ", root->data); 
+        inorder(root->right);  
+    }
+}
+
+
+void preorder(struct Node* root) {
+    if (root != NULL) {
+        printf("%d ", root->data);  
+        preorder(root->left);  
+        preorder(root->right);  
+    }
+}
+
+
+void postorder(struct Node* root) {
+    if (root != NULL) {
+        postorder(root->left);  
+        postorder(root->right);  
+        printf("%d ", root->data);  
+    }
+}
+
+
+void display(struct Node* root) {
+    if (root == NULL) {
+        printf("Tree is empty.\n");
+        return;
+    }
+    printf("In-order traversal of the tree: ");
+    inorder(root);
+    printf("\n");
+}
+
+
+int main() {
+    struct Node* root = NULL;
+    int choice, data;
+
+    while (1) {
+        printf("\nBinary Search Tree Operations\n");
+        printf("1. Insert a node into the BST\n");
+        printf("2. In-order Traversal\n");
+        printf("3. Pre-order Traversal\n");
+        printf("4. Post-order Traversal\n");
+        printf("5. Display the tree (In-order)\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the value to insert: ");
+                scanf("%d", &data);
+                root = insertNode(root, data);
+                printf("Node inserted successfully.\n");
+                break;
+
+            case 2:
+                printf("In-order Traversal: ");
+                inorder(root);
+                printf("\n");
+                break;
+
+            case 3:
+                printf("Pre-order Traversal: ");
+                preorder(root);
+                printf("\n");
+                break;
+
+            case 4:
+                printf("Post-order Traversal: ");
+                postorder(root);
+                printf("\n");
+                break;
+
+            case 5:
+                display(root);
+                break;
+
+            case 6:
+                printf("Exiting program...\n");
+                exit(0);
+
+            default:
+                printf("Invalid choice! Please enter a valid option.\n");
+        }
+    }
+
+    return 0;
+}
