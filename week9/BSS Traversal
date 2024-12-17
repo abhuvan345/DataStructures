@@ -1,0 +1,133 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100 
+
+
+int adjMatrix[MAX][MAX];
+int visited[MAX];
+int queue[MAX];
+int front = -1, rear = -1;
+int numVertices;
+
+// Enqueue operation
+void enqueue(int vertex) {
+    if (rear == MAX - 1) {
+        printf("Queue overflow!\n");
+        return;
+    }
+    if (front == -1)
+        front = 0;
+    queue[++rear] = vertex;
+}
+
+
+int dequeue() {
+    if (front == -1 || front > rear) {
+        printf("Queue underflow!\n");
+        return -1;
+    }
+    return queue[front++];
+}
+
+
+void BFS(int startVertex) {
+    for (int i = 0; i < numVertices; i++) {
+        visited[i] = 0; 
+    }
+
+    printf("BFS traversal starting from vertex %d: ", startVertex);
+    enqueue(startVertex);
+    visited[startVertex] = 1;
+
+    while (front <= rear && front != -1) {
+        int currentVertex = dequeue();
+        printf("%d ", currentVertex);
+
+        for (int i = 0; i < numVertices; i++) {
+            if (adjMatrix[currentVertex][i] == 1 && !visited[i]) {
+                enqueue(i);
+                visited[i] = 1;
+            }
+        }
+    }
+    printf("\n");
+}
+
+
+void addEdge(int u, int v) {
+    if (u >= 0 && u < numVertices && v >= 0 && v < numVertices) {
+        adjMatrix[u][v] = 1;
+        adjMatrix[v][u] = 1; 
+    } else {
+        printf("Invalid vertices!\n");
+    }
+}
+
+
+void displayAdjMatrix() {
+    printf("Adjacency Matrix:\n");
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = 0; j < numVertices; j++) {
+            printf("%d ", adjMatrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int choice, startVertex, u, v;
+
+    printf("Enter the number of vertices in the graph: ");
+    scanf("%d", &numVertices);
+
+    if (numVertices <= 0 || numVertices > MAX) {
+        printf("Invalid number of vertices!\n");
+        return 1;
+    }
+
+   
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = 0; j < numVertices; j++) {
+            adjMatrix[i][j] = 0;
+        }
+        visited[i] = 0;
+    }
+
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Add edge\n");
+        printf("2. Display adjacency matrix\n");
+        printf("3. Perform BFS traversal\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the edge (u v): ");
+                scanf("%d %d", &u, &v);
+                addEdge(u, v);
+                break;
+            case 2:
+                displayAdjMatrix();
+                break;
+            case 3:
+                printf("Enter the starting vertex: ");
+                scanf("%d", &startVertex);
+                if (startVertex < 0 || startVertex >= numVertices) {
+                    printf("Invalid starting vertex!\n");
+                } else {
+                    BFS(startVertex);
+                }
+                break;
+            case 4:
+                printf("Exiting the program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+
+    return 0;
+}
