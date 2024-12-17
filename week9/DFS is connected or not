@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100 // Maximum number of vertices
+
+int adjMatrix[MAX][MAX];
+int visited[MAX];
+int numVertices;
+
+// Depth-First Search (DFS) function
+void DFS(int vertex) {
+    visited[vertex] = 1;
+
+    for (int i = 0; i < numVertices; i++) {
+        if (adjMatrix[vertex][i] == 1 && !visited[i]) {
+            DFS(i);
+        }
+    }
+}
+
+// Function to check if the graph is connected
+int isConnected() {
+    for (int i = 0; i < numVertices; i++) {
+        visited[i] = 0; // Initialize visited array to 0
+    }
+
+    // Start DFS from the first vertex
+    DFS(0);
+
+    // Check if all vertices are visited
+    for (int i = 0; i < numVertices; i++) {
+        if (!visited[i]) {
+            return 0; // Graph is not connected
+        }
+    }
+    return 1; // Graph is connected
+}
+
+// Function to add an edge to the graph
+void addEdge(int u, int v) {
+    if (u >= 0 && u < numVertices && v >= 0 && v < numVertices) {
+        adjMatrix[u][v] = 1;
+        adjMatrix[v][u] = 1; // Comment this line for directed graph
+    } else {
+        printf("Invalid vertices!\n");
+    }
+}
+
+// Function to display the adjacency matrix
+void displayAdjMatrix() {
+    printf("Adjacency Matrix:\n");
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = 0; j < numVertices; j++) {
+            printf("%d ", adjMatrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int choice, u, v;
+
+    printf("Enter the number of vertices in the graph: ");
+    scanf("%d", &numVertices);
+
+    if (numVertices <= 0 || numVertices > MAX) {
+        printf("Invalid number of vertices!\n");
+        return 1;
+    }
+
+    // Initialize adjacency matrix and visited array
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = 0; j < numVertices; j++) {
+            adjMatrix[i][j] = 0;
+        }
+        visited[i] = 0;
+    }
+
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Add edge\n");
+        printf("2. Display adjacency matrix\n");
+        printf("3. Check if the graph is connected\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the edge (u v): ");
+                scanf("%d %d", &u, &v);
+                addEdge(u, v);
+                break;
+            case 2:
+                displayAdjMatrix();
+                break;
+            case 3:
+                if (isConnected()) {
+                    printf("The graph is connected.\n");
+                } else {
+                    printf("The graph is not connected.\n");
+                }
+                break;
+            case 4:
+                printf("Exiting the program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+
+    return 0;
+}
